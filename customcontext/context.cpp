@@ -469,7 +469,7 @@ QSGTexture *CONTEXT_CLASS::createTexture(const QImage &image, uint flags) const
         // Only use hybris textures for textures created outside the render thread.
         // They can still block for as long as normal texture, so better to not waste
         // the precious resource.
-        if (openglContext() != 0 && openglContext()->thread() != QThread::currentThread()) {
+        if (openglContext() != 0 && (openglContext()->thread() != QThread::currentThread() || image.width() >= 1080)) {
             HybrisTexture *t = HybrisTexture::create(image);
             if (t)
                 return t;
