@@ -398,7 +398,8 @@ QImage HybrisTextureFactory::image() const
 
     QImage content = QImage((const uchar *) data, m_buffer->width, m_buffer->height, m_buffer->stride * 4,
                             m_buffer->hasAlpha ? QImage::Format_ARGB32_Premultiplied
-                                                 : QImage::Format_RGB32).copy();
+                                                 : QImage::Format_RGB32);
+    content = HYBRIS_PIXEL_FORMAT_RGBA_8888 == m_buffer->format ? content.rgbSwapped() : content.copy();
 
     if (!eglHybrisUnlockNativeBuffer(m_buffer->buffer)) {
         qDebug() << "HybrisTextureFactory::image(): unlock failed; error:" << hex << eglGetError();
