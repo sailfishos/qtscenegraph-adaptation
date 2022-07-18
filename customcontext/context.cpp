@@ -94,16 +94,13 @@
 #include <private/qsgdefaultrectanglenode_p.h>
 #endif
 
-#if QT_VERSION >= 0x050200
 #ifndef QSG_NO_RENDERER_TIMING
 static bool qsg_render_timing = !qgetenv("QSG_RENDER_TIMING").isEmpty();
-#endif
 #endif
 
 namespace CustomContext
 {
 
-#if QT_VERSION >= 0x050200
 RenderContext::RenderContext(QSGContext *ctx)
     : RENDER_CONTEXT_CLASS_BASE(ctx)
 {
@@ -150,7 +147,6 @@ QSGMaterialShader *RenderContext::prepareMaterial(QSGMaterial *material)
     return shader;
 }
 #endif  //CUSTOMCONTEXT_OVERLAPRENDERER
-#endif  //QT_VERSION >= 0x050200
 
 Context::Context(QObject *parent)
     : CONTEXT_CLASS_BASE(parent)
@@ -206,22 +202,6 @@ Context::Context(QObject *parent)
     m_defaultRectangleNodes = qEnvironmentVariableIsSet("CUSTOMCONTEXT_DEFAULT_RECTANGLENODES");
 #endif
 
-#if QT_VERSION < 0x050200
-#ifdef CUSTOMCONTEXT_DITHER
-    m_dither = qgetenv("CUSTOMCONTEXT_NO_DITHER").isEmpty();
-    m_ditherProgram = 0;
-#endif
-
-#ifdef CUSTOMCONTEXT_OVERLAPRENDERER
-    m_overlapRenderer = qgetenv("CUSTOMCONTEXT_NO_OVERLAPRENDERER").isEmpty();
-    m_clipProgram = 0;
-#endif
-
-#ifdef CUSTOMCONTEXT_MATERIALPRELOAD
-    m_materialPreloading = qgetenv("CUSTOMCONTEXT_NO_MATERIAL_PRELOADING").isEmpty();
-#endif
-#endif  //QT_VERSION < 0x050200
-
 #ifdef CUSTOMCONTEXT_DEBUG
     qDebug("CustomContext created:");
     qDebug(" - multisampling: %s, samples=%d", m_useMultisampling ? "yes" : "no", m_sampleCount);
@@ -252,18 +232,6 @@ Context::Context(QObject *parent)
 #ifdef CUSTOMCONTEXT_NONPRESERVEDTEXTURE
     qDebug(" - non preserved textures: %s", m_nonPreservedTexture ? "yes" : "no");
 #endif
-
-#if QT_VERSION < 0x050200
-#ifdef CUSTOMCONTEXT_DITHER
-    qDebug(" - ordered 2x2 dither: %s", m_dither ? "yes" : "no");
-#endif
-#ifdef CUSTOMCONTEXT_OVERLAPRENDERER
-    qDebug(" - overlaprenderer: %s", m_overlapRenderer ? "yes" : "no");
-#endif
-#ifdef CUSTOMCONTEXT_MATERIALPRELOAD
-    qDebug(" - material preload: %s", m_materialPreloading ? "yes" : "no");
-#endif
-#endif  //QT_VERSION < 0x050200
 
 #ifdef CUSTOMCONTEXT_NO_DFGLYPHS
     qDebug(" - distance fields disabled");
@@ -391,16 +359,6 @@ void RENDER_CONTEXT_CLASS::initialize(QOpenGLContext *inCtx)
     if (m_materialPreloading)
         qDebug(" - Standard materials compiled in: %d ms", (int) prepareTimer.elapsed());
 #endif
-#if QT_VERSION < 0x050200
-    qDebug(" - OpenGL extensions: %s", glGetString(GL_EXTENSIONS));
-    qDebug(" - OpenGL Vendor: %s", glGetString(GL_VENDOR));
-    qDebug(" - OpenGL Version: %s", glGetString(GL_VERSION));
-    qDebug(" - OpenGL Renderer: %s", glGetString(GL_RENDERER));
-    qDebug(" - OpenGL Shading Language Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
-    int textureSize;
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
-    qDebug(" - GL Max Texture Size: %d", textureSize);
-#endif
 #endif
 
     RENDER_CONTEXT_CLASS_BASE::initialize(inCtx);
@@ -509,7 +467,6 @@ QSGTexture *RENDER_CONTEXT_CLASS::createTexture(const QImage &image) const
     return RENDER_CONTEXT_CLASS_BASE::createTexture(image);
 }
 
-#if QT_VERSION >= 0x050200
 QSGTexture *RenderContext::createTextureNoAtlas(const QImage &image) const
 {
 #ifdef CUSTOMCONTEXT_EGLGRALLOCTEXTURE
@@ -541,9 +498,6 @@ QSGTexture *RenderContext::createTextureNoAtlas(const QImage &image) const
 
     return RENDER_CONTEXT_CLASS_BASE::createTextureNoAtlas(image);
 }
-
-// Qt 5.2 branch
-#endif
 
 // Qt 5.6 branch
 #endif
