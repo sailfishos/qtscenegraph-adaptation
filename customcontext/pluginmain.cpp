@@ -60,6 +60,13 @@ QSGContext *ContextPlugin::create(const QString &) const
     return instance;
 }
 
+#if QT_VERSION >= 0x050800
+QSGContextFactoryInterface::Flags ContextPlugin::flags(const QString &key) const
+{
+    return 0; // should it be SupportsShaderEffectNode ?
+}
+#endif
+
 QQuickTextureFactory *ContextPlugin::createTextureFactoryFromImage(const QImage &image)
 {
     return instance ? instance->createTextureFactory(image) : 0;
