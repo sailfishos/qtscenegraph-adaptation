@@ -265,21 +265,20 @@ void Context::renderContextInitialized(QSGRenderContext *ctx)
     CONTEXT_CLASS_BASE::renderContextInitialized(ctx);
 }
 
-
-
-
-
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 void RenderContext::initialize(const InitParams *inCtx)
 {
+    // FIXME: missing context variable here?
 #elif QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 void RenderContext::initialize(void *inCtx)
 {
     QOpenGLContext *context = static_cast<QOpenGLContext*>(inCtx);
+    Q_UNUSED(context); // avoid warnings
 #else
 void RenderContext::initialize(QOpenGLContext *inCtx)
 {
     QOpenGLContext *context = inCtx;
+    Q_UNUSED(context); // avoid warnings
 #endif
 
 #ifdef CUSTOMCONTEXT_DITHER
